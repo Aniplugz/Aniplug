@@ -18,6 +18,8 @@ import errorHandler from './middleware/errorHandler.js';
 import config from './config/config.js';
 import redisClient from './utils/redis.js';
 import HianimeAPI from './hianime-api.js';
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
 
@@ -99,6 +101,18 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/anime', animeRoutes);
 app.use('/api/v1/users', userRoutes); // Ensure this is imported
 
+// ====== SERVE INDEX.HTML ====== //
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, 'index.html');
+  fs.readFile(indexPath, 'utf8', (err, data) => {
+    if (err) {
+      logger.error(`Failed to read index.html: ${err.message}`);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.send(data);
+  });
+});
+
 // ====== HIAnime INTEGRATION ====== //
 const hianimeProxy = async (req, res, next) => {  
   try {  
@@ -152,6 +166,7 @@ app.use((err, req, res, next) => {
   }  
   next(err);  
 });
+
 app.use(errorHandler);
 
 // ====== DATABASE & SERVER ====== //
