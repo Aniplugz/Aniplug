@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnimeStream+</title>
+  
+  <!-- Bootstrap CSS -->
+  <link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+
+  <!-- Google Fonts -->
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons -->
+  <link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+
+  <!-- Custom Styles -->
+  <style>
+    :root {
+      --accent-color: #5e35b1;
+      --light-purple: #7e57c2;
+      --black-bg: #121212;
+      --dark-bg: #1a1a1a;
+      --font-color: #ccc;
+      --pink-color: #f5abc9;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--black-bg);
+      color: var(--font-color);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #181818;
+      border-bottom: 1px solid var(--accent-color);
+    }
+
+    .logo h1 {
+      color: var(--light-purple);
+      font-weight: bold;
+      font-size: 2rem;
+      margin-right: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style-type: none;
+    }
+
+    .nav-links a {
+      font-weight: 500;
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .nav-links a:hover {
+      background-color: var(--accent-color);
+      color: #fff;
+    }
+
+    .search-bar input {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--accent-color);
+      border-radius: 20px;
+      background-color: #222;
+      color: #fff;
+      transition: box-shadow 0.3s;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 0 8px var(--light-purple);
+    }
+
+    .search-bar button {
+      border-radius: 20px;
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 1rem;
+      margin-left: 0.4rem;
+      transition: background-color 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: var(--light-purple);
+    }
+
+    .spotlight {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      border-bottom: 1px solid var(--accent-color);
+    }
+
+    .carousel-inner video {
+      width: 100%;
+      height: 65vh;
+      object-fit: cover;
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 15%;
+      left: 5%;
+      max-width: 45%;
+      text-align: left;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .carousel-caption h5 {
+      font-size: 2.5rem;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .carousel-caption p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .meta {
+      color: var(--light-purple);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-buttons a {
+      border-radius: 20px;
+      background-color: var(--accent-color);
+      color: #ffffff;
+      padding: 0.6rem 1.2rem;
+      margin-right: 0.5rem;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+
+    .cta-buttons a:hover {
+      background-color: var(--light-purple);
+    }
+
+    .trending-section {
+      padding: 2rem;
+      position: relative;
+    }
+
+    .trending-section h2 {
+      font-size: 1.5rem;
+      color: var(--pink-color);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .trending-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      margin: 0 3rem;
+      padding-bottom: 1rem;
+    }
+
+    .trending-panel {
+      position: relative;
+      width: 150px;
+      background-color: #2b293b;
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s, filter 0.3s;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .trending-panel img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid #3a3a3a;
+    }
+
+    .trending-panel:hover {
+      transform: scale(1.03);
+    }
+
+    .trending-panel.not-focused {
+      filter: grayscale(100%) brightness(80%);
+    }
+
+    .vertical-title {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      transform-origin: center;
+      font-size: 0.9rem;
+      color: #ffffff;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .rank {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--pink-color);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .arrow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s, opacity 0.3s;
+      background-color: var(--accent-color);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+    }
+
+    .arrow-btn:hover {
+      background-color: var(--light-purple);
+      opacity: 1;
+    }
+
+    .arrow-left {
+      left: 1rem;
+    }
+
+    .arrow-right {
+      right: 1rem;
+    }
+
+    .recommendations-section {
+      padding: 2rem;
+      border-top: 1px solid var(--accent-color);
+    }
+
+    .recommendations-section h2 {
+      text-align: center;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .recommendation {
+      background-color: var(--dark-bg);
+      border-radius: 8px;
+      transition: transform 0.3s;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .recommendation:hover {
+      transform: scale(1.03);
+    }
+
+    .recommendation img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 0.6rem;
+    }
+
+    .recommendation h3 {
+      color: var(--light-purple);
+      font-size: 1.1rem;
+    }
+
+    .user-profile {
+      max-width: 400px;
+      margin: 2rem auto;
+      background-color: var(--dark-bg);
+      border-radius: 8px;
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--light-purple);
+    }
+
+    .user-profile h2 {
+      margin-bottom: 0.8rem;
+    }
+
+    .avatar-upload img {
+      border: 2px solid var(--accent-color);
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      transition: border-color 0.3s;
+    }
+
+    .avatar-upload img:hover {
+      border-color: var(--light-purple);
+    }
+
+    .user-profile .form-control {
+      background-color: #222;
+      color: #fff;
+      border: 1px solid var(--accent-color);
+      border-radius: 6px;
+    }
+
+    .user-profile button {
+      border-radius: 20px;
+      background-color: var(--accent-color);
+      border: none;
+      color: #fff;
+      transition: background-color 0.3s;
+      margin-top: 0.5rem;
+    }
+
+    .user-profile button:hover {
+      background-color: var(--light-purple);
+    }
+
+    .chatroom {
+      padding: 2rem;
+      border-top: 1px solid var(--accent-color);
+    }
+
+    .chatroom h2 {
+      text-align: center;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+    }
+
+    #chatMessages {
+      height: 250px;
+      overflow-y: auto;
+      background-color: var(--dark-bg);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid var(--accent-color);
+    }
+
+    .chatroom textarea {
+      background-color: #222;
+      color: #fff;
+      border: 1px solid var(--accent-color);
+      border-radius: 6px;
+    }
+
+    .chatroom button {
+      border-radius: 20px;
+      background-color: var(--accent-color);
+      border: none;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    .chatroom button:hover {
+      background-color: var(--light-purple);
+    }
+
+    .main-footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: #181818;
+      color: #999;
+      margin-top: 2rem;
+    }
+
+    .footer-links a {
+      margin: 0 1rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--light-purple);
+    }
+
+    .social-icons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .social-icons a {
+      font-size: 1.3rem;
+      transition: color 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: var(--accent-color);
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid var(--accent-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="logo">
+      <h1>AnimeStream+</h1>
+    </div>
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="https://example.com/home">Home</a></li>
+        <li><a href="https://example.com/discover">Discover</a></li>
+        <li><a href="https://example.com/watchlist">Watchlist</a></li>
+        <li><a href="https://example.com/community">Community</a></li>
+        <li><a href="https://example.com/profile">Profile</a></li>
+        <li><a href="https://example.com/login" id="loginLogoutLink">Login</a></li>
+      </ul>
+    </nav>
+    <div class="search-bar">
+      <input type="text" placeholder="Search anime..." aria-label="Search anime" />
+      <button onclick="performSearch()">Search</button>
+    </div>
+  </header>
+
+  <!-- SPOTLIGHT / CAROUSEL -->
+  <div 
+    id="carouselExampleCaptions" 
+    class="carousel slide spotlight" 
+    data-bs-ride="carousel"
+    data-bs-interval="10000"
+  >
+    <div class="carousel-indicators">
+      <button 
+        type="button" 
+        data-bs-target="#carouselExampleCaptions" 
+        data-bs-slide-to="0" 
+        class="active" 
+        aria-current="true" 
+        aria-label="Slide 1"
+      ></button>
+      <button 
+        type="button" 
+        data-bs-target="#carouselExampleCaptions" 
+        data-bs-slide-to="1" 
+        aria-label="Slide 2"
+      ></button>
+    </div>
+
+    <div class="carousel-inner">
+      <!-- Blue Lock -->
+      <div class="carousel-item active">
+        <video autoplay loop muted>
+          <source src="blue-lock.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="carousel-caption">
+          <h5>Featured Anime: Blue Lock</h5>
+          <p class="meta">TV | 24m | Premiered Oct 8, 2022</p>
+          <p>Follow the journey of aspiring soccer players as they compete in a high-stakes battle to become the ultimate striker.</p>
+          <div class="cta-buttons">
+            <a href="https://example.com/watch/blue-lock" target="_blank">Watch Now</a>
+            <a href="https://example.com/learn-more/blue-lock" target="_blank">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bleach -->
+      <div class="carousel-item">
+        <video autoplay loop muted>
+          <source src="bleach.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="carousel-caption">
+          <h5>Featured Anime: Bleach</h5>
+          <p class="meta">TV | 24m | Premiered Oct 5, 2004</p>
+          <p>Join Ichigo Kurosaki as he battles Hollows and protects the living world from evil spirits.</p>
+          <div class="cta-buttons">
+            <a href="https://example.com/watch/bleach" target="_blank">Watch Now</a>
+            <a href="https://example.com/learn-more/bleach" target="_blank">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRENDING SECTION -->
+  <section class="trending-section">
+    <h2>Trending</h2>
+    <button class="arrow-btn arrow-left" id="leftArrow" aria-label="Scroll left">&#8249;</button>
+    <div class="trending-row" id="trendingRow">
+      <!-- Dynamic content will be loaded here -->
+    </div>
+    <button class="arrow-btn arrow-right" id="rightArrow" aria-label="Scroll right">&#8250;</button>
+  </section>
+
+  <!-- RECOMMENDATIONS SECTION -->
+  <section class="recommendations-section">
+    <h2>Recommended For You</h2>
+    <div class="recommendations-grid" id="recommendationsGrid">
+      <!-- Dynamic content will be loaded here -->
+    </div>
+  </section>
+
+  <!-- USER PROFILE SECTION -->
+  <section class="user-profile" id="userProfileSection">
+    <h2 id="profileTitle">Customize Your Profile</h2>
+    <div class="avatar-upload">
+      <img
+        id="avatarPreview"
+        src="default-avatar.png"
+        alt="Avatar"
+      />
+      <br />
+      <label for="avatarInput" class="btn btn-secondary mt-2">Upload Avatar</label>
+      <input
+        type="file"
+        id="avatarInput"
+        accept="image/*"
+        style="display:none;"
+      />
+    </div>
+
+    <textarea
+      id="bioInput"
+      placeholder="Write something about yourself..."
+      class="form-control mt-3"
+      style="resize:none;"
+    ></textarea>
+    <button id="saveBioBtn" class="btn btn-primary">Save Bio</button>
+  </section>
+
+  <!-- CHATROOM SECTION -->
+  <section class="chatroom">
+    <h2>Community Chatroom</h2>
+    <div id="chatMessages"></div>
+    <textarea
+      id="chatInput"
+      class="form-control mb-2"
+      placeholder="Type your message..."
+    ></textarea>
+    <button id="sendMessageBtn" class="btn btn-primary">Send</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <p>© 2025 AnimeStream+</p>
+    <div class="footer-links">
+      <a href="https://example.com/terms" target="_blank">Terms</a>
+      <a href="https://example.com/privacy" target="_blank">Privacy</a>
+      <a href="https://example.com/support" target="_blank">Support</a>
+    </div>
+    <div class="social-icons">
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+      <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <!-- Custom Script -->
+  <script>
+    // Anime Data
+    const trendingAnime = [
+      {
+        title: "One Piece",
+        image: "one-piece.jpg",
+        link: "https://example.com/anime/one-piece",
+      },
+      {
+        title: "Dragon Ball Z",
+        image: "dragon-ball-z.jpg",
+        link: "https://example.com/anime/dragon-ball-z",
+      },
+      {
+        title: "Bleach",
+        image: "bleach.jpg",
+        link: "https://example.com/anime/bleach",
+      },
+      {
+        title: "Blue Lock",
+        image: "blue-lock.jpg",
+        link: "https://example.com/anime/blue-lock",
+      },
+      {
+        title: "Naruto",
+        image: "naruto.jpg",
+        link: "https://example.com/anime/naruto",
+      },
+      {
+        title: "Attack on Titan",
+        image: "attack-on-titan.jpg",
+        link: "https://example.com/anime/attack-on-titan",
+      },
+    ];
+
+    const recommendedAnime = [
+      {
+        title: "Jujutsu Kaisen",
+        image: "jujutsu-kaisen.jpg",
+        link: "https://example.com/anime/jujutsu-kaisen",
+      },
+      {
+        title: "Demon Slayer",
+        image: "demon-slayer.jpg",
+        link: "https://example.com/anime/demon-slayer",
+      },
+      {
+        title: "My Hero Academia",
+        image: "my-hero-academia.jpg",
+        link: "https://example.com/anime/my-hero-academia",
+      },
+      {
+        title: "Hunter x Hunter",
+        image: "hunter-x-hunter.jpg",
+        link: "https://example.com/anime/hunter-x-hunter",
+      },
+      {
+        title: "Death Note",
+        image: "death-note.jpg",
+        link: "https://example.com/anime/death-note",
+      },
+      {
+        title: "Fullmetal Alchemist",
+        image: "fullmetal-alchemist.jpg",
+        link: "https://example.com/anime/fullmetal-alchemist",
+      },
+    ];
+
+    // Load Trending Anime
+    const trendingRow = document.getElementById("trendingRow");
+    trendingRow.innerHTML = trendingAnime
+      .map(
+        (anime) => `
+        <div class="trending-panel">
+          <a href="${anime.link}" target="_blank">
+            <img src="${anime.image}" alt="${anime.title}" />
+            <h3>${anime.title}</h3>
+          </a>
+        </div>
+      `
+      )
+      .join("");
+
+    // Load Recommended Anime
+    const recommendationsGrid = document.getElementById("recommendationsGrid");
+    recommendationsGrid.innerHTML = recommendedAnime
+      .map(
+        (anime) => `
+        <div class="recommendation">
+          <a href="${anime.link}" target="_blank">
+            <img src="${anime.image}" alt="${anime.title}" />
+            <h3>${anime.title}</h3>
+          </a>
+        </div>
+      `
+      )
+      .join("");
+
+    // Search functionality
+    function performSearch() {
+      const searchQuery = document.querySelector(".search-bar input").value;
+      if (searchQuery.trim()) {
+        // Redirect to a search results page with the query as a parameter
+        window.location.href = `https://example.com/search?q=${encodeURIComponent(
+          searchQuery
+        )}`;
+      } else {
+        alert("Please enter a search term.");
+      }
+    }
+
+    // Chatroom functionality
+    const socket = new WebSocket("wss://echo.websocket.org");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput = document.getElementById("chatInput");
+    const sendMessageBtn = document.getElementById("sendMessageBtn");
+
+    socket.addEventListener("open", (event) => {
+      console.log("Connected to WebSocket server");
+    });
+
+    socket.addEventListener("message", (event) => {
+      const message = event.data;
+      appendMessage(message);
+    });
+
+    socket.addEventListener("error", (event) => {
+      console.error("WebSocket error:", event);
+    });
+
+    socket.addEventListener("close", (event) => {
+      console.log("WebSocket connection closed");
+    });
+
+    sendMessageBtn.addEventListener("click", () => {
+      const message = chatInput.value.trim();
+      if (message) {
+        socket.send(message);
+        chatInput.value = "";
+      }
+    });
+
+    function appendMessage(message) {
+      const messageElement = document.createElement("div");
+      messageElement.textContent = message;
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeStream+</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --vantablack: #000000;
+            --deep-purple: #1A0A2E;
+            --neon-purple: #6C2BBA;
+            --glow-purple: #8A4FFF;
+            --text-primary: #E0E0E0;
+        }
+
+        body {
+            background-color: var(--vantablack);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: var(--vantablack);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--deep-purple);
+            border-radius: 4px;
+        }
+
+        .navbar {
+            background: linear-gradient(
+                to bottom,
+                rgba(26, 10, 46, 0.95) 0%,
+                rgba(0, 0, 0, 0.95) 100%
+            );
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(108, 43, 186, 0.3);
+            padding: 1rem 2rem;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--neon-purple), var(--glow-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            margin: 0 1.2rem;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--glow-purple);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .search-box {
+            background: rgba(26, 10, 46, 0.5);
+            border-radius: 25px;
+            border: 1px solid rgba(108, 43, 186, 0.3);
+            padding: 0.6rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(108, 43, 186, 0.2);
+        }
+
+        .featured-section {
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 50% 50%,
+                rgba(26, 10, 46, 0.4) 0%,
+                var(--vantablack) 80%
+            );
+            z-index: -1;
+        }
+
+        .featured-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--text-primary), var(--glow-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(108, 43, 186, 0.3);
+        }
+
+        .meta-info {
+            color: #9E9E9E;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--neon-purple), var(--deep-purple));
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            margin-right: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(108, 43, 186, 0.4);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .featured-title {
+                font-size: 2rem;
+            }
+            
+            .nav-link {
+                margin: 0 0.8rem;
+            }
+            
+            .cta-button {
+                padding: 0.8rem 1.5rem;
+                margin-right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand brand" href="#">AnimeStream+</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Discover</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Watchlist</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Community</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+                </ul>
+                
+                <div class="search-box ms-3">
+                    <input type="text" class="search-input" placeholder="Search anime...">
+                </div>
+            </div>
+        </div>
+    </nav>
